@@ -163,6 +163,17 @@ initial_activities = {
         },
         "max_participants": 16,
         "participants": ["william@mergington.edu", "jacob@mergington.edu"]
+    },
+    "Manga Maniacs": {
+        "description": "⚡ Your destiny as a manga master begins HERE! Join fellow otaku as we journey through nail-biting shonen battles, tear-jerking slice-of-life tales, and mind-bending plot twists straight from the pages of Japan's greatest graphic novels. Debate, discover, and geek out — because every panel tells a story worth sharing! 🎌📖",
+        "schedule": "Tuesdays, 5:00 PM - 6:30 PM",
+        "schedule_details": {
+            "days": ["Tuesday"],
+            "start_time": "17:00",
+            "end_time": "18:30"
+        },
+        "max_participants": 25,
+        "participants": []
     }
 }
 
