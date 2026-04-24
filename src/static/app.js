@@ -25,6 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeLoginModal = document.querySelector(".close-login-modal");
   const loginMessage = document.getElementById("login-message");
 
+  // School name used for sharing and display
+  const SCHOOL_NAME = "Mergington High School";
+
   // Activity categories with corresponding colors
   const activityTypes = {
     sports: { label: "Sports", color: "#e8f5e9", textColor: "#2e7d32" },
@@ -467,13 +470,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Display filtered activities
+    const urlParams = new URLSearchParams(window.location.search);
+    const highlightActivity = urlParams.get("activity");
     Object.entries(filteredActivities).forEach(([name, details]) => {
-      renderActivityCard(name, details);
+      renderActivityCard(name, details, highlightActivity);
     });
   }
 
   // Function to render a single activity card
-  function renderActivityCard(name, details) {
+  function renderActivityCard(name, details, highlightActivity = null) {
     const activityCard = document.createElement("div");
     activityCard.className = "activity-card";
 
@@ -569,6 +574,27 @@ document.addEventListener("DOMContentLoaded", () => {
         `
         }
       </div>
+      <div class="share-section">
+        <span class="share-label">Share:</span>
+        <div class="share-buttons">
+          <button class="share-btn share-copy tooltip" data-activity="${name}" aria-label="Copy link">
+            🔗
+            <span class="tooltip-text">Copy link</span>
+          </button>
+          <button class="share-btn share-twitter tooltip" data-activity="${name}" aria-label="Share on X (Twitter)">
+            𝕏
+            <span class="tooltip-text">Share on X</span>
+          </button>
+          <button class="share-btn share-whatsapp tooltip" data-activity="${name}" aria-label="Share on WhatsApp">
+            💬
+            <span class="tooltip-text">Share on WhatsApp</span>
+          </button>
+          <button class="share-btn share-email tooltip" data-activity="${name}" aria-label="Share via Email">
+            ✉️
+            <span class="tooltip-text">Share via Email</span>
+          </button>
+        </div>
+      </div>
     `;
 
     // Add click handlers for delete buttons
@@ -587,7 +613,53 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    // Add click handlers for share buttons
+    activityCard.querySelectorAll(".share-btn").forEach((btn) => {
+      btn.addEventListener("click", handleShareButton);
+    });
+
     activitiesList.appendChild(activityCard);
+
+    // If this activity matches the URL parameter, scroll to it
+    if (highlightActivity && highlightActivity === name) {
+      activityCard.classList.add("highlighted");
+      setTimeout(() => {
+        activityCard.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
+    }
+  }
+
+  // Build a shareable URL for an activity
+  function getActivityShareUrl(activityName) {
+    const url = new URL(window.location.href);
+    url.search = "";
+    url.searchParams.set("activity", activityName);
+    return url.toString();
+  }
+
+  // Handle share button clicks
+  function handleShareButton(event) {
+    const btn = event.currentTarget;
+    const activityName = btn.dataset.activity;
+    const shareUrl = getActivityShareUrl(activityName);
+    const shareText = `Check out "${activityName}" at ${SCHOOL_NAME} extracurricular activities!`;
+
+    if (btn.classList.contains("share-copy")) {
+      navigator.clipboard
+        .writeText(shareUrl)
+        .then(() => showMessage("Link copied to clipboard!", "success"))
+        .catch(() => showMessage("Could not copy link. Please try again.", "error"));
+    } else if (btn.classList.contains("share-twitter")) {
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+      window.open(twitterUrl, "_blank", "noopener,noreferrer");
+    } else if (btn.classList.contains("share-whatsapp")) {
+      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + " " + shareUrl)}`;
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    } else if (btn.classList.contains("share-email")) {
+      const subject = encodeURIComponent(`Join me: ${activityName}`);
+      const body = encodeURIComponent(`${shareText}\n\n${shareUrl}`);
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    }
   }
 
   // Event listeners for search and filter
