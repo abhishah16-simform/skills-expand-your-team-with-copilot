@@ -874,7 +874,7 @@ document.addEventListener("DOMContentLoaded", () => {
   applyTheme(savedTheme);
 
   darkModeToggle.addEventListener("click", () => {
-    const currentTheme = document.documentElement.getAttribute("data-theme");
+    const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
     const newTheme = currentTheme === "dark" ? "light" : "dark";
     localStorage.setItem("theme", newTheme);
     applyTheme(newTheme);
