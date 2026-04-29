@@ -1,0 +1,37 @@
+name: Remove an Activity
+description: Request to remove an existing extracurricular activity from the website
+title: "Remove activity: [Activity Name]"
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to request that an existing extracurricular activity be removed from the Mergington High School Activities website. Please provide the exact name of the activity and the reason it should be removed.
+
+  - type: input
+    id: activity-name
+    attributes:
+      label: Activity Name
+      description: The exact name of the activity to remove, as it appears on the website.
+      placeholder: e.g. "Chess Club"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason for Removal
+      description: Why should this activity be removed? For example, it is no longer offered, it has been merged with another activity, or it was added by mistake.
+      placeholder: e.g. "This club is no longer meeting due to the advisor leaving."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: confirmed
+    attributes:
+      label: Confirmation
+      description: Please confirm you want this activity permanently removed from the website.
+      options:
+        - "Yes, permanently remove this activity"
+    validations:
+      required: true
